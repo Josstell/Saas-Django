@@ -12,9 +12,16 @@ def home_page_view(request, *qrgs, **kwargs):
     page_qs = PageVisit.objects.filter(
         path=request.path
     )
+
+    try:
+        percent = (page_qs.count() / qs.count())*100
+    except:
+        percent = 0
+
     my_context = {
         "page_title": "My old page",
         "total_visit_count": qs.count(),
+        "percent": percent,
         "page_visit_count": page_qs.count()
     }
 
@@ -23,12 +30,6 @@ def home_page_view(request, *qrgs, **kwargs):
     return render(request, 'home.html', my_context)
 
 
-def home_page_view_old(request, *qrgs, **kwargs):
-    my_context = {
-        "page_title": "My old page"
-    }
-    html_ = ""
-    html_file_path = this_dir / "home.html"
-    html_ = html_file_path.read_text().format(**my_context)
+def about_page(request, *qrgs, **kwargs):
 
-    return HttpResponse(html_)
+    return home_page_view(request, *qrgs, **kwargs)
