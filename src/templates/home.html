@@ -1,0 +1,19 @@
+{% extends "base.html" %} 
+{% block head_title %} 
+Home Page - {{block.super}}
+{%endblock head_title %} 
+
+{% block content %}
+<p>{{page_title}}</p>
+
+<p>
+
+  page visits: {{page_visit_count}}
+</p>
+
+<p>
+
+  total visits:{{total_visit_count}}
+</p>
+
+{% endblock content %}
