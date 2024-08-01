@@ -1,13 +1,24 @@
+from visits.models import PageVisit
 import pathlib
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse
+from django.conf import settings
 
-from visits.models import PageVisit
+LOGIN_URL = settings.LOGIN_URL
+
 
 this_dir = pathlib.Path(__file__).resolve().parent
 
 
 def home_page_view(request, *qrgs, **kwargs):
+    print(request.user.is_authenticated, request.user)
+    return about_page(request, *qrgs, **kwargs)
+
+
+def about_page(request, *qrgs, **kwargs):
+
     qs = PageVisit.objects.all()
     page_qs = PageVisit.objects.filter(
         path=request.path
@@ -30,6 +41,11 @@ def home_page_view(request, *qrgs, **kwargs):
     return render(request, 'home.html', my_context)
 
 
-def about_page(request, *qrgs, **kwargs):
+@login_required
+def user_only_view(request, *args, **kwargs):
+    return render(request, "protected/user-only.html")
 
-    return home_page_view(request, *qrgs, **kwargs)
+
+@staff_member_required(login_url=LOGIN_URL)
+def staff_only_view(request, *args, **kwargs):
+    return render(request, "protected/staff-only.html")
